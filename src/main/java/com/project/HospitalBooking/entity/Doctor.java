@@ -1,18 +1,14 @@
 package com.project.HospitalBooking.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="doctors")
 public class Doctor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "seq1")
+    @SequenceGenerator(name = "seq1",sequenceName = "seq1",allocationSize = 1)
     private Integer doctorId;
 
     @Column(nullable=false,length=30)

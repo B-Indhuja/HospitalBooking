@@ -59,8 +59,7 @@ public class Appointment {
         this.appointmentDate=date;
     }
 
-    public LocalDate getAppointmentDate()
-    {
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
 

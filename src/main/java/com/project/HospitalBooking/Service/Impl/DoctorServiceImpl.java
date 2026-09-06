@@ -8,6 +8,8 @@ import com.project.HospitalBooking.dto.DoctorDto;
 import com.project.HospitalBooking.entity.Doctor;
 import com.project.HospitalBooking.repository.DoctorRepository;
 
+import java.util.List;
+
 @Service
 public class DoctorServiceImpl implements DoctorService{
     
@@ -21,5 +23,10 @@ public class DoctorServiceImpl implements DoctorService{
         doctor.setSpecialization(doctorDto.getSpecialization());
         doctor.setDoctorPhoneNumber(doctorDto.getDoctorPhoneNumber());
         return doctorRepository.save(doctor);
+    }
+
+    @Override
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
     }
 }

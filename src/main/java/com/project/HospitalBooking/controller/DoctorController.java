@@ -1,14 +1,13 @@
 package com.project.HospitalBooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.HospitalBooking.Service.DoctorService;
 import com.project.HospitalBooking.dto.DoctorDto;
 import com.project.HospitalBooking.entity.Doctor;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/doctors")
@@ -20,5 +19,9 @@ public class DoctorController{
     @PostMapping
     public Doctor createDoctor(@RequestBody DoctorDto doctorDto){
         return doctorService.createDoctor(doctorDto);
+    }
+    @GetMapping
+    public List<Doctor> getAllDoctors(){
+        return doctorService.getAllDoctors();
     }
 }

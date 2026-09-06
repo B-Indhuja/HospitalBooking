@@ -5,5 +5,6 @@ import com.project.HospitalBooking.entity.Appointment;
 
 public interface AppointmentService {
     Appointment createAppointment(AppointmentDto appointmentDto);
-    void cancelAppointment(Integer appointmentid);
+    void cancelAppointment(Integer appointmentId);
+    void completeAppointment(Integer appointmentId);
 }

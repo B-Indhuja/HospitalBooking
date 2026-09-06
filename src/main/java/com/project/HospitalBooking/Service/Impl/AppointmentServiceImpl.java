@@ -3,6 +3,7 @@ package com.project.HospitalBooking.Service.Impl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.project.HospitalBooking.enums.AppointmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setAppointmentDate(appointmentDto.getAppointmentDate());
         appointment.setAppointmentTime(appointmentDto.getAppointmentTime());
+        appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         if(!isValidDate(appointment.getAppointmentDate())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid appointment date");
@@ -77,7 +79,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private boolean isValidTime(LocalTime time){
-        return (time.isAfter(LocalTime.of(9, 0))&&(time.isBefore(LocalTime.of(12, 0))));
+        return !time.isBefore(LocalTime.of(9, 0))&&!time.isAfter(LocalTime.of(12, 0));
     }
 
     private boolean isPastDateTime(LocalDate date,LocalTime time){
@@ -95,11 +97,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void cancelAppointment(Integer appointmentid){
-        if(!appointmentRepository.existsById(appointmentid)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Appointment does not exist!");  
-        }
-        appointmentRepository.deleteById(appointmentid);
+    public void cancelAppointment(Integer appointmentId){
+        Appointment appointment=appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,"Appointment does not exist!"
+                        ));
+        appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public void completeAppointment(Integer appointmentId){
+        Appointment appointment=appointmentRepository.findById(appointmentId)
+                .orElseThrow(()->new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,"Appointment does not exist!"
+                ));
+        appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
+        appointmentRepository.save(appointment);
     }
 
 }

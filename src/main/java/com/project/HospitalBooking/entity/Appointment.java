@@ -3,14 +3,8 @@ package com.project.HospitalBooking.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.project.HospitalBooking.enums.AppointmentStatus;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "appointments")
@@ -33,6 +27,10 @@ public class Appointment {
 
     @Column(nullable=false)
     private LocalTime appointmentTime;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status;
     
 
     public Integer getAppointmentId(){
@@ -69,5 +67,13 @@ public class Appointment {
 
     public LocalTime getAppointmentTime(){
         return appointmentTime;
+    }
+
+    public  void setAppointmentStatus(AppointmentStatus status){
+        this.status=status;
+    }
+
+    public AppointmentStatus getAppointmentStatus(){
+        return status;
     }
 }

@@ -1,12 +1,7 @@
 package com.project.HospitalBooking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.HospitalBooking.Service.AppointmentService;
 import com.project.HospitalBooking.dto.AppointmentDto;
@@ -28,4 +23,10 @@ public class AppointmentController {
     public void cancelAppointment(@PathVariable Integer appointmentId){
         appointmentService.cancelAppointment(appointmentId);
     }
+
+    @PatchMapping("/complete/{appointmentId}")
+    public  void completeAppointment(@PathVariable Integer appointmentId){
+        appointmentService.completeAppointment(appointmentId);
+    }
+
 }

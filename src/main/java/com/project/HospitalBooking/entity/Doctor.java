@@ -7,8 +7,7 @@ import jakarta.persistence.*;
 public class Doctor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "seq1")
-    @SequenceGenerator(name = "seq1",sequenceName = "seq1",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer doctorId;
 
     @Column(nullable=false,length=30)

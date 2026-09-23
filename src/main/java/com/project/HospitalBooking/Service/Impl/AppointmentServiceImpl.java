@@ -73,11 +73,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDate today=LocalDate.now();
         if(date.isBefore(today))
             return false;
-        return !date.isAfter(today.plusDays(5));
+        if(date.isAfter(today.plusDays(5)))
+            return false;
+        return true;
     }
 
     private boolean isValidTime(LocalTime time){
-        return !time.isBefore(LocalTime.of(9, 0))&&!time.isAfter(LocalTime.of(12, 30));
+        return !time.isBefore(LocalTime.of(9, 0))&&!time.isAfter(LocalTime.of(12, 0));
     }
 
     private boolean isPastDateTime(LocalDate date,LocalTime time){

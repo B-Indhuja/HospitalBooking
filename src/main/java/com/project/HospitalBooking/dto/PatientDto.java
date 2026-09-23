@@ -6,27 +6,27 @@ public class PatientDto {
     private String patientPhoneNumber;
 
      public String getPatientName() {
-         return patientName;
+        return patientName;
     }
 
     public void setPatientName(String patientName) {
-         this.patientName = patientName;
+        this.patientName = patientName;
     }
 
     public Integer getPatientAge() {
-         return patientAge;
+        return patientAge;
     }
 
     public void setPatientAge(Integer patientAge) {
-         this.patientAge = patientAge;
+        this.patientAge = patientAge;
     }
 
     public String getPatientPhoneNumber() {
-         return patientPhoneNumber;
+        return patientPhoneNumber;
     }
 
     public void setPatientPhoneNumber(String patientPhoneNumber) {
-         this.patientPhoneNumber = patientPhoneNumber;
+        this.patientPhoneNumber = patientPhoneNumber;
     }
     
 }

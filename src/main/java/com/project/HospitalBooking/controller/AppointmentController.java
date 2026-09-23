@@ -19,7 +19,7 @@ public class AppointmentController {
         return appointmentService.createAppointment(appointment);
     }
     
-    @DeleteMapping("/{appointmentId}")
+    @PatchMapping("/{appointmentId}")
     public void cancelAppointment(@PathVariable Integer appointmentId){
         appointmentService.cancelAppointment(appointmentId);
     }

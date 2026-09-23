@@ -1,5 +1,7 @@
 package com.project.HospitalBooking.dto;
 
+import com.project.HospitalBooking.enums.Shift;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -7,7 +9,7 @@ public class AppointmentDto {
     private Integer patientId;
     private Integer doctorId;
     private LocalDate appointmentDate;
-    private LocalTime appointmentTime;
+    private Shift shift;
 
     public void setPatientId(Integer id){
         this.patientId=id;
@@ -33,11 +35,11 @@ public class AppointmentDto {
         return appointmentDate;
     }
 
-    public void setAppointmentTime(LocalTime time){
-        this.appointmentTime=time;
+    public void setShift(Shift shift){
+        this.shift=shift;
     }
 
-    public LocalTime getAppointmentTime(){
-        return appointmentTime;
+    public Shift getShift(){
+        return shift;
     }
 }

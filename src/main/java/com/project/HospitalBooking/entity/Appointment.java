@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.project.HospitalBooking.enums.AppointmentStatus;
+import com.project.HospitalBooking.enums.Shift;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,12 +26,13 @@ public class Appointment {
     @Column(nullable = false)
     private LocalDate appointmentDate;
 
-    @Column(nullable=false)
-    private LocalTime appointmentTime;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Shift shift;
     
 
     public Integer getAppointmentId(){
@@ -61,12 +63,12 @@ public class Appointment {
         return appointmentDate;
     }
 
-    public void setAppointmentTime(LocalTime time){
-        this.appointmentTime=time;
+    public void setShift(Shift shift){
+        this.shift=shift;
     }
 
-    public LocalTime getAppointmentTime(){
-        return appointmentTime;
+    public Shift getShift(){
+        return shift;
     }
 
     public  void setAppointmentStatus(AppointmentStatus status){

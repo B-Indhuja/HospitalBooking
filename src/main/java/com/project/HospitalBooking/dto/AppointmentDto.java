@@ -3,7 +3,6 @@ package com.project.HospitalBooking.dto;
 import com.project.HospitalBooking.enums.Shift;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class AppointmentDto {
     private Integer patientId;

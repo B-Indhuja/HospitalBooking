@@ -3,6 +3,7 @@ package com.project.HospitalBooking.Service.Impl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.project.HospitalBooking.dto.AppointmentResponseDto;
 import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.enums.Shift;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
@@ -36,7 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private DoctorAvailabilityRepository doctorAvailabilityRepository;
 
     @Override
-    public Appointment createAppointment(AppointmentDto appointmentDto){
+    public AppointmentResponseDto createAppointment(AppointmentDto appointmentDto){
 
         Patient patient = patientRepository.findById(appointmentDto.getPatientId())
                                            .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND,"Patient not found"));
@@ -65,7 +66,18 @@ public class AppointmentServiceImpl implements AppointmentService {
             );
         }
 
-        return appointmentRepository.save(appointment);
+        appointmentRepository.save(appointment);
+
+        AppointmentResponseDto responseDto=new AppointmentResponseDto();
+        responseDto.setAppointmentId(appointment.getAppointmentId());
+        responseDto.setPatientId(appointment.getPatient().getPatientId());
+        responseDto.setDoctorId(appointment.getDoctor().getDoctorId());
+        responseDto.setDoctorName(appointment.getDoctor().getDoctorName());
+        responseDto.setAppointmentDate(appointment.getAppointmentDate());
+        responseDto.setAppointmentStatus(appointment.getAppointmentStatus());
+        responseDto.setShift(appointment.getShift());
+
+        return responseDto;
     }
 
 

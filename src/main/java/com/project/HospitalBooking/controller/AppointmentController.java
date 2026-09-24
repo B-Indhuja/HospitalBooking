@@ -1,5 +1,6 @@
 package com.project.HospitalBooking.controller;
 
+import com.project.HospitalBooking.dto.AppointmentResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping
-    public Appointment createAppointment(@RequestBody AppointmentDto appointment){
+    public AppointmentResponseDto createAppointment(@RequestBody AppointmentDto appointment){
         return appointmentService.createAppointment(appointment);
     }
     

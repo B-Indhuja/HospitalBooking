@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.project.HospitalBooking.enums.AppointmentStatus;
+import com.project.HospitalBooking.enums.Shift;
+import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
+    @Autowired
+    private DoctorAvailabilityRepository doctorAvailabilityRepository;
+
     @Override
     public Appointment createAppointment(AppointmentDto appointmentDto){
 
@@ -42,27 +47,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setAppointmentDate(appointmentDto.getAppointmentDate());
-        appointment.setAppointmentTime(appointmentDto.getAppointmentTime());
+        appointment.setShift(appointmentDto.getShift());
         appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         if(!isValidDate(appointment.getAppointmentDate())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid appointment date");
         }
-
-        if(!isValidTime(appointment.getAppointmentTime())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid appointment time");
-        }
-
-        if(isPastDateTime(appointment.getAppointmentDate(),appointment.getAppointmentTime())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot book for a past time");
-        }
     
-        if(isPatientBooked(appointment.getPatient(),appointment.getAppointmentDate(),appointment.getAppointmentTime())){
+        if(isPatientBooked(appointment.getPatient(),appointment.getAppointmentDate(),appointment.getShift())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Patient has already booked another appointment at this time!");
         }
 
-        if(isSlotBooked(appointment.getDoctor(),appointment.getAppointmentDate(),appointment.getAppointmentTime())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Slot is booked already");
+        if (!isDoctorAvailable(appointment.getDoctor(),appointment.getAppointmentDate(),appointment.getShift())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Doctor is not available or has reached the maximum of 30 appointments"
+            );
         }
 
         return appointmentRepository.save(appointment);
@@ -73,27 +73,26 @@ public class AppointmentServiceImpl implements AppointmentService {
         LocalDate today=LocalDate.now();
         if(date.isBefore(today))
             return false;
-        if(date.isAfter(today.plusDays(5)))
-            return false;
+        if (date.equals(today)) {
+            LocalTime currentTime = LocalTime.now();
+            if (!currentTime.isBefore(LocalTime.of(9, 0))) {
+                return false;
+            }
+        }
         return true;
     }
 
-    private boolean isValidTime(LocalTime time){
-        return !time.isBefore(LocalTime.of(9, 0))&&!time.isAfter(LocalTime.of(12, 0));
+    private boolean isPatientBooked(Patient patient, LocalDate date, Shift shift){
+        return appointmentRepository.existsByPatientAndAppointmentDateAndShiftAndStatusNot(patient, date, shift,AppointmentStatus.CANCELLED);
     }
 
-    private boolean isPastDateTime(LocalDate date,LocalTime time){
-        LocalDate today=LocalDate.now();
-        LocalTime currentTime=LocalTime.now();
-        return (date.equals(today)&&time.isBefore(currentTime));
-    }
-
-    private boolean isSlotBooked(Doctor doctor,LocalDate date,LocalTime time){
-        return appointmentRepository.existsByDoctorAndAppointmentDateAndAppointmentTime(doctor,date,time);
-    }
-
-    private boolean isPatientBooked(Patient patient,LocalDate date,LocalTime time){
-        return appointmentRepository.existsByPatientAndAppointmentDateAndAppointmentTime(patient, date, time);
+    private boolean isDoctorAvailable(Doctor doctor,LocalDate date,Shift shift){
+        boolean available = doctorAvailabilityRepository.existsByDoctorAndAvailabilityDateAndShift(doctor, date, shift);
+        if (!available) {
+            return false;
+        }
+        long appointmentCount = appointmentRepository.countByDoctorAndAppointmentDateAndStatusNot(doctor, date, AppointmentStatus.CANCELLED);
+        return appointmentCount < 30;
     }
 
     @Override

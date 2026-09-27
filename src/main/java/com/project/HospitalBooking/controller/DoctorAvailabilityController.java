@@ -3,6 +3,7 @@ package com.project.HospitalBooking.controller;
 
 import com.project.HospitalBooking.Service.Impl.DoctorAvailabilityServiceImpl;
 import com.project.HospitalBooking.dto.DoctorAvailabilityDto;
+import com.project.HospitalBooking.entity.DoctorAvailability;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,7 @@ public class DoctorAvailabilityController {
     @Autowired
     private DoctorAvailabilityServiceImpl doctorAvailabilityService;
     @PostMapping
-    public com.project.HospitalBooking.entity.DoctorAvailability addAvailability(
-            @RequestBody DoctorAvailabilityDto doctorAvailabilityDto) {
+    public DoctorAvailability addAvailability(@RequestBody DoctorAvailabilityDto doctorAvailabilityDto) {
 
         return doctorAvailabilityService.addAvailability(doctorAvailabilityDto);
     }

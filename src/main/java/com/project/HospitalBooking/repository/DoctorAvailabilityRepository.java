@@ -6,9 +6,11 @@ import com.project.HospitalBooking.enums.Shift;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 
 public interface DoctorAvailabilityRepository extends JpaRepository<DoctorAvailability,Integer> {
     boolean existsByDoctorAndAvailabilityDateAndShift(Doctor doctor, LocalDate date, Shift shift);
+    Optional<DoctorAvailability> findByDoctorAndAvailabilityDateAndShift(Doctor doctor, LocalDate date, Shift shift);
 
 }

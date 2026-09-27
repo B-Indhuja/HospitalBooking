@@ -2,6 +2,7 @@ package com.project.HospitalBooking.dto;
 
 public class PatientDto {
     private String patientName;
+    private String patientGender;
     private Integer patientAge;    
     private String patientPhoneNumber;
 
@@ -28,5 +29,12 @@ public class PatientDto {
     public void setPatientPhoneNumber(String patientPhoneNumber) {
         this.patientPhoneNumber = patientPhoneNumber;
     }
-    
+
+    public String getPatientGender() {
+        return patientGender;
+    }
+
+    public void setPatientGender(String gender) {
+        this.patientGender = gender;
+    }
 }

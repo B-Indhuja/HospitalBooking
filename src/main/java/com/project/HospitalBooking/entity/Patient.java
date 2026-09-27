@@ -7,12 +7,14 @@ import jakarta.persistence.*;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "seq")
-    @SequenceGenerator(name = "seq",sequenceName = "seq",allocationSize = 1,initialValue = 101)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer patientId;
     
     @Column(nullable = false,length = 30)
     private String patientName;
+
+    @Column(nullable = false)
+    private String patientGender;
 
     @Column(nullable = false)
     private Integer patientAge;
@@ -47,5 +49,12 @@ public class Patient {
     public void setPatientPhoneNumber(String patientPhoneNumber) {
         this.patientPhoneNumber = patientPhoneNumber;
     }
-    
+
+    public String getPatientGender() {
+        return patientGender;
+    }
+
+    public void setPatientGender(String gender) {
+        this.patientGender = gender;
+    }
 }

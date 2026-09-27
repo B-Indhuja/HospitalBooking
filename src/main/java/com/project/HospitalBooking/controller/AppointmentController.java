@@ -8,6 +8,8 @@ import com.project.HospitalBooking.Service.AppointmentService;
 import com.project.HospitalBooking.dto.AppointmentDto;
 import com.project.HospitalBooking.entity.Appointment;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
@@ -18,6 +20,11 @@ public class AppointmentController {
     @PostMapping
     public AppointmentResponseDto createAppointment(@RequestBody AppointmentDto appointment){
         return appointmentService.createAppointment(appointment);
+    }
+
+    @GetMapping
+    public List<AppointmentResponseDto> getAllAppointments() {
+        return appointmentService.getAllAppointments();
     }
     
     @PatchMapping("/cancel/{appointmentId}")

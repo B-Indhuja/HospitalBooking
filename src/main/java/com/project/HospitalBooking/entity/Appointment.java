@@ -12,7 +12,8 @@ import jakarta.persistence.*;
 public class Appointment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "appointmentSequence")
+    @SequenceGenerator(name = "appointmentSequence",sequenceName = "appointmentSeq",initialValue = 101)
     private Integer appointmentId;
 
     @ManyToOne

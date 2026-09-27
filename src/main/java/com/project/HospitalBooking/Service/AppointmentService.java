@@ -4,8 +4,11 @@ import com.project.HospitalBooking.dto.AppointmentDto;
 import com.project.HospitalBooking.dto.AppointmentResponseDto;
 import com.project.HospitalBooking.entity.Appointment;
 
+import java.util.List;
+
 public interface AppointmentService {
     AppointmentResponseDto createAppointment(AppointmentDto appointmentDto);
     void cancelAppointment(Integer appointmentId);
     void completeAppointment(Integer appointmentId);
+    List<AppointmentResponseDto> getAllAppointments();
 }

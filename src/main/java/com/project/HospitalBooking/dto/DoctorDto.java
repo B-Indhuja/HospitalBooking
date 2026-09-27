@@ -2,6 +2,7 @@ package com.project.HospitalBooking.dto;
 
 public class DoctorDto{
     private String doctorName;
+    private String doctorGender;
     private String specialization;
     private String doctorPhoneNumber;
 
@@ -28,5 +29,12 @@ public class DoctorDto{
     public void setDoctorPhoneNumber(String doctorPhoneNumber) {
         this.doctorPhoneNumber = doctorPhoneNumber;
     }
-    
+
+    public String getDoctorGender() {
+        return doctorGender;
+    }
+
+    public void setDoctorGender(String gender) {
+        this.doctorGender = gender;
+    }
 }

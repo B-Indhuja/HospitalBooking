@@ -2,8 +2,12 @@ package com.project.HospitalBooking.Service.Impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import com.project.HospitalBooking.dto.AppointmentResponseDto;
+import com.project.HospitalBooking.entity.DoctorAvailability;
 import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.enums.Shift;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
@@ -99,12 +103,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private boolean isDoctorAvailable(Doctor doctor,LocalDate date,Shift shift){
-        boolean available = doctorAvailabilityRepository.existsByDoctorAndAvailabilityDateAndShift(doctor, date, shift);
-        if (!available) {
+        Optional<DoctorAvailability> availability = doctorAvailabilityRepository.findByDoctorAndAvailabilityDateAndShift(doctor, date, shift);
+        if (availability.isEmpty()) {
             return false;
         }
-        long appointmentCount = appointmentRepository.countByDoctorAndAppointmentDateAndStatusNot(doctor, date, AppointmentStatus.CANCELLED);
-        return appointmentCount < 30;
+        long appointmentCount = appointmentRepository.countByDoctorAndAppointmentDateAndStatusNot(
+                        doctor, date, AppointmentStatus.CANCELLED);
+
+        return appointmentCount < availability.get().getMaxAppointments();
     }
 
     @Override
@@ -126,5 +132,28 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
     }
+    @Override
+    public List<AppointmentResponseDto> getAllAppointments() {
 
+        List<Appointment> appointments = appointmentRepository.findAll();
+
+        List<AppointmentResponseDto> dtoList = new ArrayList<>();
+
+        for (Appointment appointment : appointments) {
+
+            AppointmentResponseDto dto = new AppointmentResponseDto();
+
+            dto.setPatientId(appointment.getPatient().getPatientId());
+            dto.setDoctorId(appointment.getDoctor().getDoctorId());
+            dto.setAppointmentDate(appointment.getAppointmentDate());
+            dto.setShift(appointment.getShift());
+            dto.setDoctorName(appointment.getDoctor().getDoctorName());
+            dto.setAppointmentStatus(appointment.getAppointmentStatus());
+            dto.setAppointmentId(appointment.getAppointmentId());
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
 }

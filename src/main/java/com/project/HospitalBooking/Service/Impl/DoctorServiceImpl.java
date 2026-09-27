@@ -22,6 +22,7 @@ public class DoctorServiceImpl implements DoctorService{
         doctor.setDoctorName(doctorDto.getDoctorName());
         doctor.setSpecialization(doctorDto.getSpecialization());
         doctor.setDoctorPhoneNumber(doctorDto.getDoctorPhoneNumber());
+        doctor.setDoctorGender(doctorDto.getDoctorGender());
         return doctorRepository.save(doctor);
     }
 

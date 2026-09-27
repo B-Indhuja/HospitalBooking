@@ -4,6 +4,8 @@ import com.project.HospitalBooking.Service.DoctorAvailabilityService;
 import com.project.HospitalBooking.dto.DoctorAvailabilityDto;
 import com.project.HospitalBooking.entity.Doctor;
 import com.project.HospitalBooking.entity.DoctorAvailability;
+import com.project.HospitalBooking.exception.DoctorAvailabilityAlreadyExistsException;
+import com.project.HospitalBooking.exception.DoctorNotFoundException;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import com.project.HospitalBooking.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,7 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     @Override
     public DoctorAvailability addAvailability(DoctorAvailabilityDto dto) {
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new DoctorNotFoundException(
                         "Doctor not found"
                 ));
 
@@ -35,8 +36,7 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
                         dto.getAvailabilityDate(),
                         dto.getShift())) {
 
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+            throw new DoctorAvailabilityAlreadyExistsException(
                     "Doctor availability already exists for this date and shift"
             );
         }

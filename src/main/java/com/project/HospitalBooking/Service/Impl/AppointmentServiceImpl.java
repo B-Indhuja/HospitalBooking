@@ -10,6 +10,7 @@ import com.project.HospitalBooking.dto.AppointmentResponseDto;
 import com.project.HospitalBooking.entity.DoctorAvailability;
 import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.enums.Shift;
+import com.project.HospitalBooking.exception.*;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,9 +45,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDto createAppointment(AppointmentDto appointmentDto){
 
         Patient patient = patientRepository.findById(appointmentDto.getPatientId())
-                                           .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND,"Patient not found"));
+                                           .orElseThrow(() ->new PatientNotFoundException("Patient not found"));
         Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
-                                        .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND,"Doctor not found"));
+                                        .orElseThrow(() ->new DoctorNotFoundException("Doctor not found"));
 
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
@@ -56,17 +57,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         if(!isValidDate(appointment.getAppointmentDate())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid appointment date");
+            throw new InvalidAppointmentDateException("Invalid appointment date");
         }
     
         if(isPatientBooked(appointment.getPatient(),appointment.getAppointmentDate(),appointment.getShift())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Patient has already booked another appointment at this time!");
+            throw new PatientAlreadyBookedException("Patient has already booked another appointment at this time!");
         }
 
         if (!isDoctorAvailable(appointment.getDoctor(),appointment.getAppointmentDate(),appointment.getShift())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Doctor is not available or has reached the maximum of 30 appointments"
+            throw new DoctorNotAvailableException(
+                    "Doctor is not available or has reached the maximum number of appointments"
             );
         }
 
@@ -116,8 +116,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void cancelAppointment(Integer appointmentId){
         Appointment appointment=appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,"Appointment does not exist!"
+                .orElseThrow(() -> new AppointmentNotFoundException(
+                        "Appointment does not exist!"
                         ));
         appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
@@ -126,8 +126,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void completeAppointment(Integer appointmentId){
         Appointment appointment=appointmentRepository.findById(appointmentId)
-                .orElseThrow(()->new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,"Appointment does not exist!"
+                .orElseThrow(()->new AppointmentNotFoundException(
+                        "Appointment does not exist!"
                 ));
         appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);

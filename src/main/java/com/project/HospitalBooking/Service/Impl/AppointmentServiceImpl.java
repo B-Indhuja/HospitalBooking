@@ -12,10 +12,11 @@ import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.enums.Shift;
 import com.project.HospitalBooking.exception.*;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import com.project.HospitalBooking.Service.AppointmentService;
 import com.project.HospitalBooking.dto.AppointmentDto;
@@ -40,6 +41,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private DoctorAvailabilityRepository doctorAvailabilityRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
     @Override
     public AppointmentResponseDto createAppointment(AppointmentDto appointmentDto){
@@ -70,16 +73,22 @@ public class AppointmentServiceImpl implements AppointmentService {
             );
         }
 
-        appointmentRepository.save(appointment);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        log.info("Appointment {} created successfully for patient {} with doctor {}",
+                savedAppointment.getAppointmentId(),
+                patient.getPatientId(),
+                doctor.getDoctorId());
+
 
         AppointmentResponseDto responseDto=new AppointmentResponseDto();
-        responseDto.setAppointmentId(appointment.getAppointmentId());
-        responseDto.setPatientId(appointment.getPatient().getPatientId());
-        responseDto.setDoctorId(appointment.getDoctor().getDoctorId());
-        responseDto.setDoctorName(appointment.getDoctor().getDoctorName());
-        responseDto.setAppointmentDate(appointment.getAppointmentDate());
-        responseDto.setAppointmentStatus(appointment.getAppointmentStatus());
-        responseDto.setShift(appointment.getShift());
+        responseDto.setAppointmentId(savedAppointment.getAppointmentId());
+        responseDto.setPatientId(savedAppointment.getPatient().getPatientId());
+        responseDto.setDoctorId(savedAppointment.getDoctor().getDoctorId());
+        responseDto.setDoctorName(savedAppointment.getDoctor().getDoctorName());
+        responseDto.setAppointmentDate(savedAppointment.getAppointmentDate());
+        responseDto.setAppointmentStatus(savedAppointment.getAppointmentStatus());
+        responseDto.setShift(savedAppointment.getShift());
 
         return responseDto;
     }
@@ -121,6 +130,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         ));
         appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
+        log.info("Appointment {} cancelled successfully", appointmentId);
     }
 
     @Override
@@ -131,6 +141,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 ));
         appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
+        log.info("Appointment {} completed successfully", appointmentId);
+
     }
     @Override
     public List<AppointmentResponseDto> getAllAppointments() {
@@ -153,7 +165,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             dtoList.add(dto);
         }
-
+        log.info("Fetched {} appointments", dtoList.size());
         return dtoList;
     }
 }

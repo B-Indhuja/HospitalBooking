@@ -8,10 +8,11 @@ import com.project.HospitalBooking.exception.DoctorAvailabilityAlreadyExistsExce
 import com.project.HospitalBooking.exception.DoctorNotFoundException;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import com.project.HospitalBooking.repository.DoctorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,9 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
 
     @Autowired
     private DoctorAvailabilityRepository doctorAvailabilityRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(DoctorAvailabilityServiceImpl.class);
+
     @Override
     public DoctorAvailability addAvailability(DoctorAvailabilityDto dto) {
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
@@ -35,7 +39,6 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
                         doctor,
                         dto.getAvailabilityDate(),
                         dto.getShift())) {
-
             throw new DoctorAvailabilityAlreadyExistsException(
                     "Doctor availability already exists for this date and shift"
             );
@@ -46,13 +49,20 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
         availability.setAvailabilityDate(dto.getAvailabilityDate());
         availability.setShift(dto.getShift());
         availability.setMaxAppointments(dto.getMaxAppointments());
-        return doctorAvailabilityRepository.save(availability);
+        DoctorAvailability savedAvailability =
+                doctorAvailabilityRepository.save(availability);
+
+        log.info("Doctor availability added successfully for doctor {} on {} for {} shift",
+                doctor.getDoctorId(),
+                dto.getAvailabilityDate(),
+                dto.getShift());
+
+        return savedAvailability;
     }
     @Override
     public List<DoctorAvailabilityDto> getAllDoctorAvailability() {
 
-        List<DoctorAvailability> availabilityList =
-                doctorAvailabilityRepository.findAll();
+        List<DoctorAvailability> availabilityList = doctorAvailabilityRepository.findAll();
 
         List<DoctorAvailabilityDto> dtoList = new ArrayList<>();
 
@@ -68,6 +78,8 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
             dtoList.add(dto);
         }
 
+        log.info("Fetched {} doctor availability records",
+                availabilityList.size());
         return dtoList;
     }
 }

@@ -1,5 +1,6 @@
 package com.project.HospitalBooking.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class PatientController {
     private PatientService patientService;
 
     @PostMapping
-    public Patient createPatient(@RequestBody PatientDto patientDto){
+    public Patient createPatient(@Valid @RequestBody PatientDto patientDto){
         return patientService.createPatient(patientDto);
     }
 

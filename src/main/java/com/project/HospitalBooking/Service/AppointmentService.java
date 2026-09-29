@@ -11,4 +11,5 @@ public interface AppointmentService {
     void cancelAppointment(Integer appointmentId);
     void completeAppointment(Integer appointmentId);
     List<AppointmentResponseDto> getAllAppointments();
+    List<AppointmentResponseDto> getTodayBookedAppointments();
 }

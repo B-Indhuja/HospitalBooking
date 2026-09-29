@@ -2,6 +2,7 @@ package com.project.HospitalBooking.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.enums.Shift;
@@ -16,4 +17,5 @@ import com.project.HospitalBooking.entity.Patient;
 public interface AppointmentRepository extends JpaRepository<Appointment,Integer> {
     boolean existsByPatientAndAppointmentDateAndShiftAndStatusNot(Patient patient, LocalDate appointmentDate, Shift shift, AppointmentStatus status);
     long countByDoctorAndAppointmentDateAndStatusNot(Doctor doctor, LocalDate date, AppointmentStatus appointmentStatus);
+    List<Appointment> findByAppointmentDateAndStatus(LocalDate appointmentDate, AppointmentStatus status);
 }

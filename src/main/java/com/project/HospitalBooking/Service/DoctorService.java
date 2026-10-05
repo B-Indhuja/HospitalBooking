@@ -8,4 +8,5 @@ import java.util.List;
 public interface DoctorService {
     Doctor createDoctor(DoctorDto doctorDto);
     List<Doctor> getAllDoctors();
+    Doctor saveDoctor(Doctor doctor);
 }

@@ -1,5 +1,6 @@
 package com.project.HospitalBooking.Service.Impl;
 
+import com.project.HospitalBooking.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class PatientServiceImpl implements PatientService {
         patient.setPatientAge(patientDto.getPatientAge());
         patient.setPatientPhoneNumber(patientDto.getPatientPhoneNumber());
         patient.setPatientGender(patientDto.getPatientGender());
+
         Patient savedPatient = patientRepository.save(patient);
 
         log.info("Patient created successfully with ID: {}",
@@ -37,5 +39,10 @@ public class PatientServiceImpl implements PatientService {
         List<Patient> patients = patientRepository.findAll();
         log.info("Fetched {} patients", patients.size());
         return patients;
+    }
+
+    @Override
+    public Patient savePatient(Patient patient) {
+        return patientRepository.save(patient);
     }
 }

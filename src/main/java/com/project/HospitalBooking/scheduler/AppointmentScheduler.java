@@ -66,12 +66,10 @@ public class AppointmentScheduler {
                                         AppointmentResponseDto::getDoctorName
                                 ));
 
-                for (Map.Entry<String, List<AppointmentResponseDto>> entry
-                        : doctorWiseAppointments.entrySet()) {
+                for (Map.Entry<String, List<AppointmentResponseDto>> entry : doctorWiseAppointments.entrySet()) {
 
                     String doctorName = entry.getKey();
-                    List<AppointmentResponseDto> doctorAppointments =
-                            entry.getValue();
+                    List<AppointmentResponseDto> doctorAppointments = entry.getValue();
 
                     writer.write("----------------------------------------");
                     writer.newLine();
@@ -82,33 +80,15 @@ public class AppointmentScheduler {
                     writer.write("----------------------------------------");
                     writer.newLine();
 
-                    for (AppointmentResponseDto appointment
-                            : doctorAppointments) {
-
-                        writer.write(
-                                "Appointment ID: "
-                                        + appointment.getAppointmentId()
-                        );
+                    for (AppointmentResponseDto appointment : doctorAppointments) {
+                        writer.write("Appointment ID: " + appointment.getAppointmentId());
                         writer.newLine();
-
-                        writer.write(
-                                "Patient ID: "
-                                        + appointment.getPatientId()
-                        );
+                        writer.write("Patient ID: " + appointment.getPatientId());
                         writer.newLine();
-
-                        writer.write(
-                                "Shift: "
-                                        + appointment.getShift()
-                        );
+                        writer.write("Shift: " + appointment.getShift());
                         writer.newLine();
-
-                        writer.write(
-                                "Status: "
-                                        + appointment.getAppointmentStatus()
-                        );
+                        writer.write("Status: " + appointment.getAppointmentStatus());
                         writer.newLine();
-
                         writer.newLine();
                     }
                 }

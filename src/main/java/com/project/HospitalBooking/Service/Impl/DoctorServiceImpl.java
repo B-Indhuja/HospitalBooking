@@ -41,4 +41,9 @@ public class DoctorServiceImpl implements DoctorService{
         log.info("Fetched {} doctors", doctors.size());
         return doctors;
     }
+
+    @Override
+    public Doctor saveDoctor(Doctor doctor) {
+        return doctorRepository.save(doctor);
+    }
 }

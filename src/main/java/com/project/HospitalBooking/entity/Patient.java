@@ -22,6 +22,10 @@ public class Patient {
     @Column(nullable = false,length = 10,unique = true)
     private String patientPhoneNumber;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
     public Integer getPatientId() {
         return patientId;
     }
@@ -56,5 +60,13 @@ public class Patient {
 
     public void setPatientGender(String gender) {
         this.patientGender = gender;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

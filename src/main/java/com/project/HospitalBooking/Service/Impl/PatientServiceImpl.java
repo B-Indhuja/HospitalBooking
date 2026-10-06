@@ -1,6 +1,7 @@
 package com.project.HospitalBooking.Service.Impl;
 
 import com.project.HospitalBooking.entity.User;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,43 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient savePatient(Patient patient) {
         return patientRepository.save(patient);
+    }
+
+    @Override
+    @Transactional
+    public void deactivatePatient(Integer patientId) {
+
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        patient.setActive(false);
+        User user = patient.getUser();
+        if (user != null) {
+            user.setActive(false);
+        }
+        patientRepository.save(patient);
+
+        log.info("Patient {} deactivated successfully", patientId);
+    }
+
+    @Override
+    @Transactional
+    public void reactivatePatient(Integer patientId) {
+
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() ->
+                        new RuntimeException("Patient not found"));
+
+        patient.setActive(true);
+
+        User user = patient.getUser();
+        if (user != null) {
+            user.setActive(true);
+        }
+
+        patientRepository.save(patient);
+
+        log.info("Patient {} reactivated successfully", patientId);
     }
 }

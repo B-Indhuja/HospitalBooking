@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() ->
                             new UsernameNotFoundException("User not found"));
+            if (!user.isActive()) {
+                throw new UsernameNotFoundException("User account is inactive");
+            }
 
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getUsername())

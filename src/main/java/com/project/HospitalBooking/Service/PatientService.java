@@ -10,4 +10,6 @@ public interface PatientService {
     Patient createPatient(PatientDto patientDto);
     List<Patient> getAllPatients();
     Patient savePatient(Patient patient);
+    void deactivatePatient(Integer patientId);
+    void reactivatePatient(Integer patientId);
 }

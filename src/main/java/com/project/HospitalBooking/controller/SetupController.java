@@ -30,6 +30,7 @@ public class SetupController {
     public ResponseEntity<String> createAdmin(
            @Valid @RequestBody AdminSetupDto request) {
 
+        System.out.println(">>> SetupController reached");
         if (userService.existsByRole(Role.ADMIN)) {
 
             logger.warn(

@@ -8,6 +8,7 @@ import com.project.HospitalBooking.dto.PatientRegistrationDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<String> login(
-            @Valid@RequestBody LoginRequestDto loginRequest) {
+            @Valid @RequestBody LoginRequestDto loginRequest) {
 
         String token = authService.login(loginRequest);
 
@@ -38,6 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/register/doctor")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> registerDoctor(
             @Valid @RequestBody DoctorRegistrationDto request) {
 

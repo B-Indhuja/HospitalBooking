@@ -15,6 +15,9 @@ import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -45,10 +48,22 @@ public class AppointmentServiceImpl implements AppointmentService {
     private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
     @Override
+    @PreAuthorize("hasRole('PATIENT')")
     public AppointmentResponseDto createAppointment(AppointmentDto appointmentDto){
 
         Patient patient = patientRepository.findById(appointmentDto.getPatientId())
                                            .orElseThrow(() ->new PatientNotFoundException("Patient not found"));
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        if (!patient.getUser().getUsername().equals(username)) {
+            throw new RuntimeException(
+                    "You are not allowed to create an appointment for this patient"
+            );
+        }
+
         Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
                                         .orElseThrow(() ->new DoctorNotFoundException("Doctor not found"));
 
@@ -125,28 +140,51 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @PreAuthorize("hasRole('PATIENT')")
     public void cancelAppointment(Integer appointmentId){
         Appointment appointment=appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException(
                         "Appointment does not exist!"
                         ));
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        if (!appointment.getPatient().getUser().getUsername().equals(username)) {
+            throw new RuntimeException(
+                    "You are not allowed to cancel this appointment"
+            );
+        }
         appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
         log.info("Appointment {} cancelled successfully", appointmentId);
     }
 
     @Override
+    @PreAuthorize("hasRole('DOCTOR')")
     public void completeAppointment(Integer appointmentId){
         Appointment appointment=appointmentRepository.findById(appointmentId)
                 .orElseThrow(()->new AppointmentNotFoundException(
                         "Appointment does not exist!"
                 ));
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        if (!appointment.getDoctor().getUser().getUsername().equals(username)) {
+            throw new RuntimeException(
+                    "You are not allowed to complete this appointment"
+            );
+        }
         appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
         log.info("Appointment {} completed successfully", appointmentId);
 
     }
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<AppointmentResponseDto> getAllAppointments() {
 
         List<Appointment> appointments = appointmentRepository.findAll();

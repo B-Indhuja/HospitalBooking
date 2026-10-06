@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.HospitalBooking.Service.PatientService;
@@ -36,6 +37,7 @@ public class PatientServiceImpl implements PatientService {
         return savedPatient;
     }
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Patient> getAllPatients() {
         List<Patient> patients = patientRepository.findAll();
         log.info("Fetched {} patients", patients.size());
@@ -49,6 +51,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deactivatePatient(Integer patientId) {
 
         Patient patient = patientRepository.findById(patientId)
@@ -66,6 +69,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void reactivatePatient(Integer patientId) {
 

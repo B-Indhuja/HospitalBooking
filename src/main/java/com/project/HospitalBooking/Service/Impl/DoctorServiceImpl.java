@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.HospitalBooking.Service.DoctorService;
@@ -23,6 +24,7 @@ public class DoctorServiceImpl implements DoctorService{
     private static final Logger log = LoggerFactory.getLogger(DoctorServiceImpl.class);
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
     public Doctor createDoctor(DoctorDto doctorDto){
         Doctor doctor=new Doctor();
         doctor.setDoctorName(doctorDto.getDoctorName());
@@ -51,6 +53,7 @@ public class DoctorServiceImpl implements DoctorService{
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deactivateDoctor(Integer doctorId) {
 
         Doctor doctor = doctorRepository.findById(doctorId)
@@ -69,6 +72,7 @@ public class DoctorServiceImpl implements DoctorService{
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void reactivateDoctor(Integer doctorId) {
 
         Doctor doctor = doctorRepository.findById(doctorId)

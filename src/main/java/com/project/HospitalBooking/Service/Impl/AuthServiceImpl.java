@@ -13,6 +13,7 @@ import com.project.HospitalBooking.entity.User;
 import com.project.HospitalBooking.enums.Role;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -119,13 +120,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void registerDoctor(DoctorRegistrationDto request) {
 
         if (userService.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
 
-        // Create User
         User user = new User();
 
         user.setUsername(request.getUsername());

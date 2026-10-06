@@ -11,6 +11,9 @@ import com.project.HospitalBooking.repository.DoctorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -28,12 +31,26 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
     private static final Logger log = LoggerFactory.getLogger(DoctorAvailabilityServiceImpl.class);
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
     public DoctorAvailability addAvailability(DoctorAvailabilityDto dto) {
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new DoctorNotFoundException(
                         "Doctor not found"
                 ));
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
 
+        String username = authentication.getName();
+
+        if (authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_DOCTOR"))) {
+
+            if (!doctor.getUser().getUsername().equals(username)) {
+                throw new RuntimeException(
+                        "You are not allowed to create availability for this doctor"
+                );
+            }
+        }
         if (doctorAvailabilityRepository
                 .existsByDoctorAndAvailabilityDateAndShift(
                         doctor,
@@ -60,6 +77,7 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
         return savedAvailability;
     }
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<DoctorAvailabilityDto> getAllDoctorAvailability() {
 
         List<DoctorAvailability> availabilityList = doctorAvailabilityRepository.findAll();

@@ -15,7 +15,7 @@ import com.project.HospitalBooking.entity.Patient;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment,Integer> {
-    boolean existsByPatientAndAppointmentDateAndShiftAndStatusNot(Patient patient, LocalDate appointmentDate, Shift shift, AppointmentStatus status);
-    long countByDoctorAndAppointmentDateAndStatusNot(Doctor doctor, LocalDate date, AppointmentStatus appointmentStatus);
-    List<Appointment> findByAppointmentDateAndStatus(LocalDate appointmentDate, AppointmentStatus status);
+    boolean existsByPatientAndAppointmentDateAndShiftAndAppointmentStatusNot(Patient patient, LocalDate appointmentDate, Shift shift, AppointmentStatus appointmentStatus);
+    long countByDoctorAndAppointmentDateAndAppointmentStatusNot(Doctor doctor, LocalDate date, AppointmentStatus appointmentStatus);
+    List<Appointment> findByAppointmentDateAndAppointmentStatus(LocalDate appointmentDate, AppointmentStatus appointmentStatus);
 }

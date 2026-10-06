@@ -110,7 +110,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private boolean isPatientBooked(Patient patient, LocalDate date, Shift shift){
-        return appointmentRepository.existsByPatientAndAppointmentDateAndShiftAndStatusNot(patient, date, shift,AppointmentStatus.CANCELLED);
+        return appointmentRepository.existsByPatientAndAppointmentDateAndShiftAndAppointmentStatusNot(patient, date, shift,AppointmentStatus.CANCELLED);
     }
 
     private boolean isDoctorAvailable(Doctor doctor,LocalDate date,Shift shift){
@@ -118,7 +118,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (availability.isEmpty()) {
             return false;
         }
-        long appointmentCount = appointmentRepository.countByDoctorAndAppointmentDateAndStatusNot(
+        long appointmentCount = appointmentRepository.countByDoctorAndAppointmentDateAndAppointmentStatusNot(
                         doctor, date, AppointmentStatus.CANCELLED);
 
         return appointmentCount < availability.get().getMaxAppointments();
@@ -174,7 +174,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentResponseDto> getTodayBookedAppointments() {
 
         List<Appointment> appointments =
-                appointmentRepository.findByAppointmentDateAndStatus(
+                appointmentRepository.findByAppointmentDateAndAppointmentStatus(
                         LocalDate.now(),
                         AppointmentStatus.BOOKED);
 

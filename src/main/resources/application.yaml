@@ -21,4 +21,4 @@ logging:
       name: D:/Spring_boot/HospitalBookingLogs/hospital-booking.log
 
 jwt:
-  secret: H0spitalBooking_JWT_2026_S3cret_Key_9xK7mP2qL8vR
+  secret: ${JWT_SECRET}

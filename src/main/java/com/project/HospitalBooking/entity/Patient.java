@@ -30,5 +30,7 @@ public class Patient {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
+    @Column(nullable = false)
+    private boolean active = true;
 
 }

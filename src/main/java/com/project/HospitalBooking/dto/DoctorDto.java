@@ -4,7 +4,11 @@ package com.project.HospitalBooking.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class DoctorDto{
 
     @NotBlank(message="Doctor name is required")
@@ -24,35 +28,4 @@ public class DoctorDto{
     @Pattern(regexp = "\\d{10}",message = "Phone number should be exactly 10 digits")
     private String doctorPhoneNumber;
 
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public String getDoctorPhoneNumber() {
-        return doctorPhoneNumber;
-    }
-
-    public void setDoctorPhoneNumber(String doctorPhoneNumber) {
-        this.doctorPhoneNumber = doctorPhoneNumber;
-    }
-
-    public String getDoctorGender() {
-        return doctorGender;
-    }
-
-    public void setDoctorGender(String gender) {
-        this.doctorGender = gender;
-    }
 }

@@ -3,6 +3,7 @@ import com.project.HospitalBooking.dto.AdminSetupDto;
 import com.project.HospitalBooking.entity.User;
 import com.project.HospitalBooking.enums.Role;
 import com.project.HospitalBooking.Service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class SetupController {
 
     @PostMapping("/admin")
     public ResponseEntity<String> createAdmin(
-            @RequestBody AdminSetupDto request) {
+           @Valid @RequestBody AdminSetupDto request) {
 
         if (userService.existsByRole(Role.ADMIN)) {
 

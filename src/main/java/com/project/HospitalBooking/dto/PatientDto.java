@@ -1,6 +1,11 @@
 package com.project.HospitalBooking.dto;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
 public class PatientDto {
 
     @NotBlank(message="Patient name is required")
@@ -24,35 +29,5 @@ public class PatientDto {
     @Pattern(regexp = "\\d{10}",message = "Phone number should be exactly 10 digits")
     private String patientPhoneNumber;
 
-     public String getPatientName() {
-        return patientName;
-    }
 
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public Integer getPatientAge() {
-        return patientAge;
-    }
-
-    public void setPatientAge(Integer patientAge) {
-        this.patientAge = patientAge;
-    }
-
-    public String getPatientPhoneNumber() {
-        return patientPhoneNumber;
-    }
-
-    public void setPatientPhoneNumber(String patientPhoneNumber) {
-        this.patientPhoneNumber = patientPhoneNumber;
-    }
-
-    public String getPatientGender() {
-        return patientGender;
-    }
-
-    public void setPatientGender(String gender) {
-        this.patientGender = gender;
-    }
 }

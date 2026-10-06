@@ -1,6 +1,7 @@
 package com.project.HospitalBooking.controller;
 
 import com.project.HospitalBooking.dto.AppointmentResponseDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping
-    public AppointmentResponseDto createAppointment(@RequestBody AppointmentDto appointment){
+    public AppointmentResponseDto createAppointment(@Valid @RequestBody AppointmentDto appointment){
         return appointmentService.createAppointment(appointment);
     }
 

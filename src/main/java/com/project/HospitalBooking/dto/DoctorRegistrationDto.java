@@ -1,7 +1,10 @@
 package com.project.HospitalBooking.dto;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 public class DoctorRegistrationDto {
 
         @NotBlank(message = "Doctor name is required")
@@ -34,54 +37,11 @@ public class DoctorRegistrationDto {
         private String username;
 
         @NotBlank(message = "Password is required")
+        @Size(min = 8, message = "Password must be at least 8 characters")
+        @Pattern(
+                regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
+                message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        )
         private String password;
 
-
-        public String getDoctorName() {
-            return doctorName;
-        }
-
-        public void setDoctorName(String doctorName) {
-            this.doctorName = doctorName;
-        }
-
-        public String getDoctorGender() {
-            return doctorGender;
-        }
-
-        public void setDoctorGender(String doctorGender) {
-            this.doctorGender = doctorGender;
-        }
-
-        public String getSpecialization() {
-            return specialization;
-        }
-
-        public void setSpecialization(String specialization) {
-            this.specialization = specialization;
-        }
-
-        public String getDoctorPhoneNumber() {
-            return doctorPhoneNumber;
-        }
-
-        public void setDoctorPhoneNumber(String doctorPhoneNumber) {
-            this.doctorPhoneNumber = doctorPhoneNumber;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
     }

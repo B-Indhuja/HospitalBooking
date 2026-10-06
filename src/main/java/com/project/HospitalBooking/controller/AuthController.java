@@ -30,7 +30,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<String> login(
-            @RequestBody LoginRequestDto loginRequest) {
+            @Valid@RequestBody LoginRequestDto loginRequest) {
 
         String token = authService.login(loginRequest);
 

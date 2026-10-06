@@ -1,11 +1,14 @@
 package com.project.HospitalBooking.Service.Impl;
 
 import com.project.HospitalBooking.Service.DoctorAvailabilityService;
+import com.project.HospitalBooking.dto.AvailableDoctorDto;
 import com.project.HospitalBooking.dto.DoctorAvailabilityDto;
 import com.project.HospitalBooking.entity.Doctor;
 import com.project.HospitalBooking.entity.DoctorAvailability;
+import com.project.HospitalBooking.enums.AppointmentStatus;
 import com.project.HospitalBooking.exception.DoctorAvailabilityAlreadyExistsException;
 import com.project.HospitalBooking.exception.DoctorNotFoundException;
+import com.project.HospitalBooking.repository.AppointmentRepository;
 import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import com.project.HospitalBooking.repository.DoctorRepository;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,9 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
 
     @Autowired
     private DoctorAvailabilityRepository doctorAvailabilityRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     private static final Logger log = LoggerFactory.getLogger(DoctorAvailabilityServiceImpl.class);
 
@@ -99,5 +106,58 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
         log.info("Fetched {} doctor availability records",
                 availabilityList.size());
         return dtoList;
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('PATIENT', 'ADMIN')")
+    public List<AvailableDoctorDto> getAvailableDoctors() {
+
+        LocalDate today = LocalDate.now();
+
+        List<DoctorAvailability> availabilities =
+                doctorAvailabilityRepository
+                        .findByAvailabilityDateGreaterThanEqual(today);
+
+        List<AvailableDoctorDto> availableDoctors = new ArrayList<>();
+
+        for (DoctorAvailability availability : availabilities) {
+
+            Doctor doctor = availability.getDoctor();
+
+            // Ignore inactive doctors
+            if (!doctor.isActive()) {
+                continue;
+            }
+
+            long bookedAppointments =
+                    appointmentRepository
+                            .countByDoctorAndAppointmentDateAndAppointmentStatusNot(
+                                    doctor,
+                                    availability.getAvailabilityDate(),
+                                    AppointmentStatus.CANCELLED
+                            );
+
+            int remainingSlots =
+                    availability.getMaxAppointments()
+                            - (int) bookedAppointments;
+
+            // Ignore doctors with no remaining slots
+            if (remainingSlots <= 0) {
+                continue;
+            }
+
+            AvailableDoctorDto dto = new AvailableDoctorDto();
+
+            dto.setDoctorId(doctor.getDoctorId());
+            dto.setDoctorName(doctor.getDoctorName());
+            dto.setSpecialization(doctor.getSpecialization());
+            dto.setAvailabilityDate(availability.getAvailabilityDate());
+            dto.setShift(availability.getShift());
+            dto.setRemainingSlots(remainingSlots);
+
+            availableDoctors.add(dto);
+        }
+
+        return availableDoctors;
     }
 }

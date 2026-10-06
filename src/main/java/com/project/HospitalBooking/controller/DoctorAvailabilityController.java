@@ -2,6 +2,7 @@ package com.project.HospitalBooking.controller;
 
 
 import com.project.HospitalBooking.Service.Impl.DoctorAvailabilityServiceImpl;
+import com.project.HospitalBooking.dto.AvailableDoctorDto;
 import com.project.HospitalBooking.dto.DoctorAvailabilityDto;
 import com.project.HospitalBooking.entity.DoctorAvailability;
 import jakarta.validation.Valid;
@@ -27,5 +28,10 @@ public class DoctorAvailabilityController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<DoctorAvailabilityDto> getAllDoctorAvailability() {
         return doctorAvailabilityService.getAllDoctorAvailability();
+    }
+
+    @GetMapping("/available")
+    public List<AvailableDoctorDto> getAvailableDoctors() {
+        return doctorAvailabilityService.getAvailableDoctors();
     }
 }

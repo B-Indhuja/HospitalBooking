@@ -15,6 +15,7 @@ import com.project.HospitalBooking.repository.DoctorAvailabilityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,6 +50,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     @PreAuthorize("hasRole('PATIENT')")
+    @CacheEvict(value = "availableDoctors", allEntries = true)
     public AppointmentResponseDto createAppointment(AppointmentDto appointmentDto){
 
         Patient patient = patientRepository.findById(appointmentDto.getPatientId())
@@ -141,6 +143,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     @PreAuthorize("hasRole('PATIENT')")
+    @CacheEvict(value = "availableDoctors", allEntries = true)
     public void cancelAppointment(Integer appointmentId){
         Appointment appointment=appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException(

@@ -14,6 +14,7 @@ import com.project.HospitalBooking.repository.DoctorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -110,8 +111,9 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
 
     @Override
     @PreAuthorize("hasAnyRole('PATIENT', 'ADMIN')")
+    @Cacheable("availableDoctors")
     public List<AvailableDoctorDto> getAvailableDoctors() {
-
+        System.out.println("Executing getAvailableDoctors()");
         LocalDate today = LocalDate.now();
 
         List<DoctorAvailability> availabilities =

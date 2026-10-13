@@ -1,0 +1,3 @@
+
+jwt:
+  secret: "test-only-secret-key-for-jwt-testing-1234567890"

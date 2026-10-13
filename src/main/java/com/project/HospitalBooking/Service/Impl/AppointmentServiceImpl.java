@@ -1,5 +1,6 @@
 package com.project.HospitalBooking.Service.Impl;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private DoctorAvailabilityRepository doctorAvailabilityRepository;
+
+    private Clock clock = Clock.systemDefaultZone();
 
     private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
@@ -113,11 +116,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     private boolean isValidDate(LocalDate date){
-        LocalDate today=LocalDate.now();
+        LocalDate today=LocalDate.now(clock);
         if(date.isBefore(today))
             return false;
         if (date.equals(today)) {
-            LocalTime currentTime = LocalTime.now();
+            LocalTime currentTime = LocalTime.now(clock);
             if (!currentTime.isBefore(LocalTime.of(9, 0))) {
                 return false;
             }

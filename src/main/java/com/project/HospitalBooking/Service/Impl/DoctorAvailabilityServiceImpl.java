@@ -1,5 +1,6 @@
 package com.project.HospitalBooking.Service.Impl;
 
+import com.project.HospitalBooking.Service.AvailableDoctorsCacheService;
 import com.project.HospitalBooking.Service.DoctorAvailabilityService;
 import com.project.HospitalBooking.dto.AvailableDoctorDto;
 import com.project.HospitalBooking.dto.DoctorAvailabilityDto;
@@ -14,7 +15,6 @@ import com.project.HospitalBooking.repository.DoctorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +35,9 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private AvailableDoctorsCacheService availableDoctorsCacheService;
 
     private static final Logger log = LoggerFactory.getLogger(DoctorAvailabilityServiceImpl.class);
 
@@ -108,12 +111,18 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
                 availabilityList.size());
         return dtoList;
     }
-
     @Override
     @PreAuthorize("hasAnyRole('PATIENT', 'ADMIN')")
-    @Cacheable("availableDoctors")
     public List<AvailableDoctorDto> getAvailableDoctors() {
-        System.out.println("Executing getAvailableDoctors()");
+        return availableDoctorsCacheService.getAvailableDoctors();
+    }
+
+    /*
+
+    public List<AvailableDoctorDto> loadAvailableDoctors() {
+
+        System.out.println("Executing loadAvailableDoctors()");
+
         LocalDate today = LocalDate.now();
 
         List<DoctorAvailability> availabilities =
@@ -162,4 +171,6 @@ public class DoctorAvailabilityServiceImpl implements DoctorAvailabilityService 
 
         return availableDoctors;
     }
+    */
+
 }

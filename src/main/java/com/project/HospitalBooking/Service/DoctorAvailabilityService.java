@@ -10,4 +10,5 @@ public interface DoctorAvailabilityService {
     DoctorAvailability addAvailability(DoctorAvailabilityDto dto);
     List<DoctorAvailabilityDto> getAllDoctorAvailability();
     List<AvailableDoctorDto> getAvailableDoctors();
+
 }

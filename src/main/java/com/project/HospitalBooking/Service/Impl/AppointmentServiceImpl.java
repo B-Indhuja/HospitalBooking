@@ -75,12 +75,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentDate(appointmentDto.getAppointmentDate());
         appointment.setShift(appointmentDto.getShift());
         appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
-       /*
+
         if(!isValidDate(appointment.getAppointmentDate())){
             throw new InvalidAppointmentDateException("Invalid appointment date");
         }
 
-        */
     
         if(isPatientBooked(appointment.getPatient(),appointment.getAppointmentDate(),appointment.getShift())){
             throw new PatientAlreadyBookedException("Patient has already booked another appointment at this time!");
